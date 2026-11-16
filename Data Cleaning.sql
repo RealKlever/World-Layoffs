@@ -50,14 +50,31 @@ WHERE row_num > 1;
 SELECT *
 FROM layoffs_staging2;
 
+# Look at columns to find anything to standardize
+SELECT DISTINCT company
+FROM layoffs_staging2
+ORDER BY 1;
+
+SELECT DISTINCT location
+FROM layoffs_staging2
+ORDER BY 1;
+
+SELECT DISTINCT industry
+FROM layoffs_staging2
+ORDER BY 1;
+
+SELECT `date`
+FROM layoffs_staging2;
+
+SELECT DISTINCT country
+FROM layoffs_staging2
+ORDER BY 1;
+
+
+
 # Remove whitespace from the company names
 UPDATE layoffs_staging2
 SET company = TRIM(company);
-
-# Look at industry to see any repeated/renamed labels
-SELECT DISTINCT(industry)
-FROM layoffs_staging2
-ORDER BY 1;
 
 # Find the most common label for crypto based industry
 SELECT *
@@ -68,6 +85,23 @@ WHERE industry LIKE 'Crypto%';
 UPDATE layoffs_staging2
 SET industry = 'Crypto'
 WHERE industry LIKE 'Crypto%';
+
+# Remove period at the end of some US country labels
+UPDATE layoffs_staging2
+SET country = TRIM(TRAILING '.' FROM country)
+WHERE country LIKE 'United States%';
+
+SELECT `date`, 
+STR_TO_DATE(`date`, '%m/%d/%Y')
+FROM layoffs_staging2;
+
+# Update date to standard SQL form
+UPDATE layoffs_staging2
+SET `date` = STR_TO_DATE(`date`, '%m/%d/%Y');
+
+# Change data column from text data type to date data type
+ALTER TABLE layoffs_staging2
+MODIFY COLUMN `date` DATE;
 
 
 
