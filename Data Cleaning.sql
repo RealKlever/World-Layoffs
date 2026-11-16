@@ -47,5 +47,28 @@ WHERE row_num > 1;
 
 -- Standardize Data --
 
+SELECT *
+FROM layoffs_staging2;
+
+# Remove whitespace from the company names
+UPDATE layoffs_staging2
+SET company = TRIM(company);
+
+# Look at industry to see any repeated/renamed labels
+SELECT DISTINCT(industry)
+FROM layoffs_staging2
+ORDER BY 1;
+
+# Find the most common label for crypto based industry
+SELECT *
+FROM layoffs_staging2
+WHERE industry LIKE 'Crypto%';
+
+# Standardize crypto label
+UPDATE layoffs_staging2
+SET industry = 'Crypto'
+WHERE industry LIKE 'Crypto%';
+
+
 
 
