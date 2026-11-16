@@ -45,7 +45,8 @@ FROM layoffs_staging2
 WHERE row_num > 1;
 
 
--- Standardize Data --
+
+-- Standardize Data Non-NULL/Blank --
 
 SELECT *
 FROM layoffs_staging2;
@@ -69,7 +70,6 @@ FROM layoffs_staging2;
 SELECT DISTINCT country
 FROM layoffs_staging2
 ORDER BY 1;
-
 
 
 # Remove whitespace from the company names
@@ -102,6 +102,19 @@ SET `date` = STR_TO_DATE(`date`, '%m/%d/%Y');
 # Change data column from text data type to date data type
 ALTER TABLE layoffs_staging2
 MODIFY COLUMN `date` DATE;
+
+
+
+-- Standardize Data IS NULL/Blank --
+
+SELECT *
+FROM layoffs_staging2
+WHERE industry IS NULL
+OR industry = '';
+
+SELECT *
+FROM layoffs_staging2
+WHERE total_laid_off IS NULL;
 
 
 
